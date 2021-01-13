@@ -1,12 +1,8 @@
 from typing import NamedTuple
 import re
-from constants import *
 
-class Token(NamedTuple):
-    type: str
-    value: str
-    line: int
-    column: int
+from constants import *
+import schema
 
 def tokenize(code):
     token_specification = [
@@ -44,4 +40,4 @@ def tokenize(code):
             continue
         elif kind == TOKEN_MISMATCH:
             raise RuntimeError(f'{value!r} unexpected on line {line_num}')
-        yield Token(kind, value, line_num, column)
+        yield schema.Token(kind, value, line_num, column)
