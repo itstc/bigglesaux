@@ -3,18 +3,29 @@ import styled from 'styled-components';
 
 import itemInfo from '../data/itemInfo.json';
 
+import ItemLink from './ItemLink';
+
 const StyledTable = styled.table`
   width: 100%;
   text-align: left;
   border: 1px solid #eee;
   font-family: 'Arial', san-serif;
+  background: #323232;
+  border-collapse: collapse;
 `;
 
 const StyledRow = styled.tr`
 `;
 
+const StyledHeading = styled.th`
+  padding: 4px;
+  color: white;
+  border: 1px solid #646464;
+`;
+
 const StyledCell = styled.td`
-  border: 1px solid #eee;
+  padding: 4px;
+  border: 1px solid #646464;
 `
 
 const GoldSpan = styled.span`
@@ -26,6 +37,7 @@ const SilverSpan = styled.span`
 const CopperSpan = styled.span`
   color: brown;
 `;
+
 const convertNumberToCurrency = (amt) => {
   return (<div>
     <GoldSpan>{Math.floor(amt/1000)}G </GoldSpan>
@@ -40,7 +52,7 @@ export default ({data, headers}) => {
       <thead>
         <StyledRow>
           {headers.map((item) => {
-            return <th key={`tableHeading-${item}`}>{item}</th>
+            return <StyledHeading key={`tableHeading-${item}`}>{item}</StyledHeading>
           })}
         </StyledRow>
       </thead>
@@ -58,9 +70,12 @@ export default ({data, headers}) => {
                   }
                 } else if (hk == 'itemId') {
                   let itemId = data[i][hk].split(':');
-                  dataValue = itemInfo[itemId[0]]['itemName'];
+                  let item = itemInfo[itemId[0]];
+                  dataValue = <ItemLink color={item['color']} itemName={item['itemName']}/>;
                 }
-                return <StyledCell key={`tableColumn-${item['itemId']}-${hk}`}>{dataValue}</StyledCell>
+                return <StyledCell key={`tableColumn-${item['itemId']}-${hk}`}>{
+                  dataValue
+                }</StyledCell>
               })
             }
           </StyledRow>
