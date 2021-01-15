@@ -40,8 +40,8 @@ const CopperSpan = styled.span`
 
 const convertNumberToCurrency = (amt) => {
   return (<div>
-    <GoldSpan>{Math.floor(amt/1000)}G </GoldSpan>
-    <SilverSpan>{Math.floor((amt%1000)/100)}S </SilverSpan>
+    <GoldSpan>{Math.floor(amt/10000)}G </GoldSpan>
+    <SilverSpan>{Math.floor((amt%10000)/100)}S </SilverSpan>
     <CopperSpan>{Math.floor(amt%100)}C</CopperSpan>
   </div>);
 }
