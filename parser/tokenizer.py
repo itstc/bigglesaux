@@ -4,6 +4,36 @@ import re
 from constants import *
 import schema
 
+def queryKey(content, keys, addFn):
+    keyIdx = 0
+    result = []
+    current = None
+    start = False
+    currKey,currVal = None,None
+    for token in tokenize(content):
+        if token.key == TOKEN_LISTSTART and keyIdx >= len(keys):
+            start = True
+        elif token.key == TOKEN_KEY and keyIdx < len(keys) and token.value == keys[keyIdx]:
+            keyIdx += 1
+
+        if not start:
+            continue
+
+        elif token.key == TOKEN_LISTSTART:
+            current = []
+        elif token.key == TOKEN_LISTEND:
+            addFn(currKey, currVal, current)
+            result.append(current)
+            start = False
+            keyIdx = 0
+        elif token.key == TOKEN_KEY:
+            currKey = token.value
+        elif token.key in (TOKEN_STRING, TOKEN_NUMBER, TOKEN_BOOLEAN):
+            currVal = token.value
+        elif token.key == TOKEN_LISTNEXT:
+            addFn(currKey, currVal, current)
+    return result
+
 def tokenize(code):
     token_specification = [
         (TOKEN_NUMBER, r'\d+(\.\d*)?'),
@@ -11,6 +41,7 @@ def tokenize(code):
         (TOKEN_KEY, r'\[(".*"|\d+)\]'),
         (TOKEN_STRING,  r'".*"'),
         (TOKEN_BOOLEAN,  r'(true|false)'),
+        (TOKEN_NIL,  r'nil'),
         (TOKEN_ROOT,  r'[A-Za-z0-9]+'), 
         (TOKEN_LISTSTART, r'{'),
         (TOKEN_LISTEND, r'}'),
@@ -28,6 +59,8 @@ def tokenize(code):
         column = mo.start() - line_start
         if kind == TOKEN_NUMBER:
             value = float(value) if '.' in value else int(value)
+        elif kind == TOKEN_NUMBER:
+            value = None
         elif kind == TOKEN_KEY:
             value = re.sub(r'(^\["?|"?\]$)', '', value)
         elif kind == TOKEN_STRING:

@@ -1,5 +1,6 @@
 *~
 *.swp
-*.json
+parser/*.json
 __pycache__
 
+node_modules

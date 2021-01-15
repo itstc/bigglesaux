@@ -46,4 +46,15 @@ class Listing:
     def __repr__(self):
         return 'Listing({}, {})'.format(self.buyout, self.recordedAt)
 
+class ItemInfo:
+    def __init__(self, itemId, itemName, color):
+        self.itemId = itemId
+        self.itemName = itemName
+        self.color = color
+
+    def __str__(self):
+        return 'ItemInfo({}, {}, {})'.format(self.itemId, self.itemName, self.color)
+
+    def __repr__(self):
+        return 'ItemInfo({}, {}, {})'.format(self.itemId, self.itemName, self.color)
 
