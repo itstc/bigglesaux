@@ -24,6 +24,7 @@ const StyledHeading = styled.th`
 `;
 
 const StyledCell = styled.td`
+  width: 50%;
   padding: 4px;
   border: 1px solid #646464;
 `

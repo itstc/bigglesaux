@@ -1,5 +1,6 @@
 *~
 *.swp
+*.env
 parser/*.json
 __pycache__
 
