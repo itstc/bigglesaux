@@ -23,7 +23,7 @@ function sanitize(s, fn, placeholder) {
   return parsed;
 }
 
-async function createTxn(pool, filename, writeFn) {
+async function createTxnFromFile(pool, filename, writeFn) {
   const content = await readFile(filename);
   const client = await pool.connect();
 
@@ -35,9 +35,24 @@ async function createTxn(pool, filename, writeFn) {
     await client.query('ROLLBACK');
     throw e;
   } finally {
-    console.log('done');
     client.release();
   }
+}
+
+async function createTxn(pool, writeFn) {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN'); 
+    await writeFn(client);
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+
 }
 
 function createPoolFromEnv() {
@@ -54,5 +69,6 @@ module.exports = {
   readFile,
   sanitize,
   createTxn,
+  createTxnFromFile,
   createPoolFromEnv
 }

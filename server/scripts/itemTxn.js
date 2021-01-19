@@ -20,7 +20,7 @@ async function updateDb(client, content) {
   const pool = utils.createPoolFromEnv();
 
   try {
-    await utils.createTxn(pool, filename, updateDb);
+    await utils.createTxnFromFile(pool, filename, updateDb);
   } catch (e) {
     throw e;
   }

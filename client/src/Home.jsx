@@ -1,6 +1,7 @@
 import React from 'react';
-import mockData from '../data/result.json'; 
 import Table from './Table';
+import Search from './Search';
+import endpoints from './endpoints';
 
 export default class HomePage extends React.Component {
   constructor(props) {
@@ -8,13 +9,42 @@ export default class HomePage extends React.Component {
     this.state = {
       data: []
     }
+
+    this.updateData = this.updateData.bind(this);
   }
 
   componentDidMount() {
-    this.setState({data: mockData});
+    fetch(endpoints.GET_ITEMS)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({data: data});
+      });
+  }
+
+
+  updateData(value) {
+    fetch(`${endpoints.GET_ITEMS}?q=${value}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({data: data});
+      });
   }
 
   render() {
-    return <Table data={this.state.data} headers={["itemId", "minBuyout"]}/>;
+    return (
+      <div>
+        <Search onEnter={this.updateData}/>
+        <Table
+          data={this.state.data}
+          headers={[{
+              key: "name",
+              text: "Name"
+            },{
+              key: "buyout",
+              text: "Minimum Buyout"
+            }]}
+        />
+      </div>
+    )
   }
 }

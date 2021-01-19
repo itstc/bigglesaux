@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import itemInfo from '../data/itemInfo.json';
-
 import ItemLink from './ItemLink';
 
 const StyledTable = styled.table`
@@ -27,6 +25,7 @@ const StyledCell = styled.td`
   width: 50%;
   padding: 4px;
   border: 1px solid #646464;
+  color: white;
 `
 
 const GoldSpan = styled.span`
@@ -52,29 +51,27 @@ export default ({data, headers}) => {
     <StyledTable>
       <thead>
         <StyledRow>
-          {headers.map((item) => {
-            return <StyledHeading key={`tableHeading-${item}`}>{item}</StyledHeading>
+          {headers.map(({text}) => {
+            return <StyledHeading key={`tableHeading-${text}`}>{text}</StyledHeading>
           })}
         </StyledRow>
       </thead>
       <tbody>
         {data.map((item, i) => {
-          return <StyledRow key={`tableRow-${item['itemId']}`}>
+          return <StyledRow key={`tableRow-${item.id}`}>
             {
-              headers.map((hk) => {
-                let dataValue = data[i][hk];
-                if (hk == 'minBuyout') {
-                  if (!dataValue) {
+              headers.map(({key}) => {
+                let dataValue = data[i][key];
+                if (key == 'buyout') {
+                  if (dataValue < 0) {
                     dataValue = '???';
                   } else {
                     dataValue = convertNumberToCurrency(dataValue); 
                   }
-                } else if (hk == 'itemId') {
-                  let itemId = data[i][hk].split(':');
-                  let item = itemInfo[itemId[0]];
-                  dataValue = <ItemLink color={item['color']} itemName={item['itemName']}/>;
+                } else if (key == 'name') {
+                  dataValue = <ItemLink color={item.color} itemName={item.name}/>;
                 }
-                return <StyledCell key={`tableColumn-${item['itemId']}-${hk}`}>{
+                return <StyledCell key={`tableColumn-${item.id}-${key}`}>{
                   dataValue
                 }</StyledCell>
               })

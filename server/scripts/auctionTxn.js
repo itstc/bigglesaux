@@ -19,7 +19,7 @@ async function insertToDb(client, content) {
   const pool = utils.createPoolFromEnv();
 
   try {
-    await utils.createTxn(pool, filename, insertToDb);
+    await utils.createTxnFromFile(pool, filename, insertToDb);
   } catch (e) {
     throw e;
   }
