@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 const getItems = (request, response) => {
-  pool.query('SELECT id, name, color FROM item', (error, results) => {
+  pool.query('SELECT * FROM item LIMIT 30', (error, results) => {
     if (error) {
       throw error; 
     }
