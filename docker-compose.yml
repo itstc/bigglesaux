@@ -35,14 +35,3 @@ services:
       - "8080:8080"
     command:
       "npm start"
-  nginx:
-    image: nginx:1.17
-    container_name: ngx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - /data/certs:/etc/nginx/certs
-    depends_on:
-      - client
