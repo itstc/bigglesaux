@@ -5,4 +5,5 @@ parser/*.json
 __pycache__
 
 node_modules
+data
 itemdb
