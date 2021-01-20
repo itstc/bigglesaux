@@ -9,6 +9,8 @@ USER node
 RUN npm install
 COPY --chown=node:node . .
 
+RUN npm run build
+
 EXPOSE 8080
 
 CMD [ "npm", "start" ]

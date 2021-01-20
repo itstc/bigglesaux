@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  db:
+    container_name: bigglesaux-db
+    image: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./itemdb:/var/lib/mysql
+    env_file:
+      - secrets.env
+  app:
+    build: ./server
+    container_name: bigglesaux-server
+    restart: always
+    volumes:
+      - ./server/scripts:/home/node/app/scripts
+      - ./server/src:/home/node/app/src
+    env_file:
+      - secrets.env
+    ports:
+      - "3000:3000"
+    command:
+      "npm start"
+  client:
+    build: ./client
+    container_name: bigglesaux-client
+    restart: always
+    volumes:
+      - ./client/src:/home/node/app/src
+    env_file:
+      - secrets.env
+    ports:
+      - "8080:8080"
+    command:
+      "npm start"
+
+volumes:
+  static_volume:
