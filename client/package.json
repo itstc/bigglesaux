@@ -28,6 +28,8 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
     "codemirror": "^5.53.2",
     "react-codemirror2": "^7.1.0",
     "react-router-dom": "^5.2.0",

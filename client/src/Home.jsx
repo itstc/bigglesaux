@@ -21,7 +21,6 @@ export default class HomePage extends React.Component {
       });
   }
 
-
   updateData(value) {
     fetch(`${endpoints.GET_ITEMS}?q=${value}`)
       .then(res => res.json())
@@ -33,8 +32,8 @@ export default class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <Search onEnter={this.updateData}/>
         <Table
+          onUpdate={this.updateData}
           data={this.state.data}
           headers={[{
               key: "name",
