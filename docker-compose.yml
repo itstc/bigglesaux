@@ -43,6 +43,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
+      - /data/certs:/etc/ssl
     depends_on:
       - client
 

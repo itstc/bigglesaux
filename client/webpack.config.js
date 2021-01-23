@@ -15,6 +15,7 @@ module.exports = () => {
 
   const devServer = {
     hot: true,
+    public: 'biggles.live',
     historyApiFallback: true,
     port: process.env.CLIENT_PORT || 8080,
     proxy: {
