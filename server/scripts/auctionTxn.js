@@ -2,7 +2,7 @@ const utils = require('./utils');
 
 async function insertToDb(client, content) {
   await Promise.all(content[0].map(async (item) => {
-    if (item === null) {
+    if (item === null || item.minBuyout === null) {
       return Promise.resolve();
     }
     const insertQuery = "INSERT INTO item(id, buyout) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET buyout = excluded.buyout";
