@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledBar = styled.input`
+import TextField from '@material-ui/core/TextField';
+
+const StyledSearch = styled(TextField)`
   width: 100%;
-  padding: 8px;
-  font-size: 1.2em;
-`
+`;
 
 class Search extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class Search extends React.Component {
   }
 
   render() {
-    return <StyledBar type="search" placeholder="Search..." onKeyPress={this.handleEnter}/>
+    return <StyledSearch placeholder="Search..." onKeyPress={this.handleEnter}/>
   }
 }
 

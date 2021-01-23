@@ -1,84 +1,104 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 import ItemLink from './ItemLink';
-
-const StyledTable = styled.table`
-  width: 100%;
-  text-align: left;
-  border: 1px solid #eee;
-  font-family: 'Arial', san-serif;
-  background: #323232;
-  border-collapse: collapse;
-`;
-
-const StyledRow = styled.tr`
-`;
-
-const StyledHeading = styled.th`
-  padding: 4px;
-  color: white;
-  border: 1px solid #646464;
-`;
-
-const StyledCell = styled.td`
-  width: 50%;
-  padding: 4px;
-  border: 1px solid #646464;
-  color: white;
-`
+import Search from './Search';
 
 const GoldSpan = styled.span`
   color: gold;
 `;
 const SilverSpan = styled.span`
-  color: silver;
+  color: white;
 `;
 const CopperSpan = styled.span`
   color: brown;
 `;
 
-const convertNumberToCurrency = (amt) => {
-  return (<div>
-    <GoldSpan>{Math.floor(amt/10000)}G </GoldSpan>
-    <SilverSpan>{Math.floor((amt%10000)/100)}S </SilverSpan>
-    <CopperSpan>{Math.floor(amt%100)}C</CopperSpan>
-  </div>);
+const StickyHeadRow = styled(TableRow)`
+  > th {
+    top: 65px;
+  }
+`;
+
+export default class AuctionTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data || []
+    }
+
+    this.convertNumberToCurrency = this.convertNumberToCurrency.bind(this);
+    this.updateData = this.updateData.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.data !== prevProps.data) {
+      this.setState({
+        data: this.props.data || []
+      });
+    } 
+  }
+
+  convertNumberToCurrency(amt) {
+    return (<div>
+      <GoldSpan>{Math.floor(amt/10000)}G </GoldSpan>
+      <SilverSpan>{Math.floor((amt%10000)/100)}S </SilverSpan>
+      <CopperSpan>{Math.floor(amt%100)}C</CopperSpan>
+    </div>);
+  }
+
+  updateData(value) {
+    this.props.onUpdate(value);
+  }
+
+  render() {
+    return (
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell colSpan={Object.keys(this.props.headers).length || 1}>
+              <Search onEnter={this.updateData}/>
+            </TableCell>
+          </TableRow>
+          <StickyHeadRow>
+            {this.props.headers.map(({text}) => {
+              return <TableCell key={`tableHeading-${text}`}>{text}</TableCell>
+            })}
+          </StickyHeadRow>
+        </TableHead>
+        <TableBody>
+          {this.props.data.map((item, i) => {
+            return <TableRow key={`tableRow-${item.id}`} hover>
+              {
+                this.props.headers.map(({key}) => {
+                  let dataValue = this.props.data[i][key];
+                  if (key == 'buyout') {
+                    if (dataValue < 0) {
+                      dataValue = '???';
+                    } else {
+                      dataValue = this.convertNumberToCurrency(dataValue); 
+                    }
+                  } else if (key == 'name') {
+                    dataValue = <ItemLink color={item.color} itemName={item.name}/>;
+                  }
+                  return <TableCell key={`tableColumn-${item.id}-${key}`}>{
+                    dataValue
+                  }</TableCell>
+                })
+              }
+            </TableRow>
+          })}
+        </TableBody>
+      </Table>
+    );
+  }
 }
 
-export default ({data, headers}) => {
-  return (
-    <StyledTable>
-      <thead>
-        <StyledRow>
-          {headers.map(({text}) => {
-            return <StyledHeading key={`tableHeading-${text}`}>{text}</StyledHeading>
-          })}
-        </StyledRow>
-      </thead>
-      <tbody>
-        {data.map((item, i) => {
-          return <StyledRow key={`tableRow-${item.id}`}>
-            {
-              headers.map(({key}) => {
-                let dataValue = data[i][key];
-                if (key == 'buyout') {
-                  if (dataValue < 0) {
-                    dataValue = '???';
-                  } else {
-                    dataValue = convertNumberToCurrency(dataValue); 
-                  }
-                } else if (key == 'name') {
-                  dataValue = <ItemLink color={item.color} itemName={item.name}/>;
-                }
-                return <StyledCell key={`tableColumn-${item.id}-${key}`}>{
-                  dataValue
-                }</StyledCell>
-              })
-            }
-          </StyledRow>
-        })}
-      </tbody>
-    </StyledTable>
-  );
-}
+
